@@ -1,1 +1,17 @@
-@import "tailwindcss";
+/* PrimeNG styles - using Aura theme configured in app.config.ts */
+@import "primeicons/primeicons.css";
+
+html, body {
+	height: 100%;
+	margin: 0;
+	font-family: Arial, Helvetica, sans-serif;
+	background: #f7f7f7;
+}
+
+/* Minimal centering helper used by login form */
+.center-screen {
+	min-height: 100vh;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}

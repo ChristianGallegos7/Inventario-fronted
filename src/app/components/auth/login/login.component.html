@@ -1,8 +1,46 @@
-<section class="center-screen">
-  <p-card header="Iniciar sesión" [style]="{width: '25rem'}">
-    <div style="text-align: center;">
-      Lorem ipsum dolor sit amet...
+<section class="h-screen flex justify-center items-center imagen">
+  <p-card class="w-96 p-4">
+    <p>
+      <img src="/assets/alien-logo.png" alt="Logo de la empresa" />
+    </p>
+    <p-divider></p-divider>
+    <div class="flex flex-col gap-5">
+      <p-floatlabel variant="on">
+        <input
+          pInputText
+          id="on_label"
+          [(ngModel)]="identificacion"
+          autocomplete="off"
+          class="w-full"
+        />
+        <label for="on_label">Identificación</label>
+      </p-floatlabel>
+      @if (codigoAccesoEnviado) {
+      <p-floatlabel variant="on">
+        <input
+          pInputText
+          id="on_label"
+          [(ngModel)]="codigoAcceso"
+          autocomplete="off"
+          class="w-full"
+        />
+        <label for="on_label">Código</label>
+      </p-floatlabel>
+      } @if (!codigoAccesoEnviado) {
+      <button
+        class="w-full mt-4 bg-(--color-azul) text-white py-2.5 cursor-pointer hover:bg-(--color-azul)/90"
+      >
+        <i class="pi pi-check mr-2" pButtonIcon></i>
+        <span pButtonLabel>Enviar código</span>
+      </button>
+      }@else {
+      <button
+        class="w-full mt-4 bg-(--color-azul) text-white py-2.5 cursor-pointer hover:bg-(--color-azul)/90"
+      >
+        <i class="pi pi-check mr-2" pButtonIcon></i>
+        <span pButtonLabel>Iniciar sesión</span>
+      </button>
+      }
     </div>
   </p-card>
 </section>
- 

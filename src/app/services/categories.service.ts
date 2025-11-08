@@ -1,0 +1,15 @@
+import { HttpClient } from '@angular/common/http';
+import { inject, Injectable } from '@angular/core';
+import { environment } from '../../environments/environment.development';
+
+@Injectable({
+  providedIn: 'root',
+})
+export class CategoriesService {
+  env = environment;
+  private http = inject(HttpClient);
+
+  obtenerCategorias() {
+    return this.http.get<any[]>(`${this.env.API_URL}/categories`);
+  }
+}

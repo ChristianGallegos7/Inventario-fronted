@@ -20,7 +20,7 @@ import { DividerModule } from 'primeng/divider';
 })
 export class LoginComponent {
   identificacion!: number;
-  codigoAccesoEnviado: boolean = true;
+  codigoAccesoEnviado: boolean = false;
   codigoAcceso!: number;
   // Maneja el envío del formulario de login
   onSubmit(identificacion: number) {

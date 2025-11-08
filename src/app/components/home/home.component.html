@@ -1,1 +1,53 @@
-<p>home works!</p>
+<div class="h-screen flex" style="background: var(--bg, #fff);">
+	<!-- Sidebar -->
+	<aside class="w-64 p-4 flex flex-col gap-6" style="background: linear-gradient(180deg,var(--color-pastel,#B5EAD7), #EAF7F0);">
+		<div class="flex items-center gap-3">
+			<img src="/assets/alien-logo.png" alt="logo" class="w-10 h-10 rounded-md" />
+			<div>
+				<h3 class="text-lg font-semibold text-[#0C0F16]">AllienGnss</h3>
+				<p class="text-sm text-[#355C7D]/80">Inventario</p>
+			</div>
+		</div>
+
+		<nav class="flex-1">
+					<ul class="flex flex-col gap-2">
+						<li>
+							<a routerLink="dashboard" routerLinkActive="sidebar-item-active" class="flex items-center px-3 py-2 rounded-lg hover:bg-white/60 transition-colors cursor-pointer text-[#0C0F16]"><i class="pi pi-home mr-3"></i><span>Dashboard</span></a>
+						</li>
+						<li>
+							<a routerLink="productos" routerLinkActive="sidebar-item-active" class="flex items-center px-3 py-2 rounded-lg hover:bg-white/60 transition-colors cursor-pointer text-[#0C0F16]"><i class="pi pi-box mr-3"></i><span>Productos</span></a>
+						</li>
+						<li>
+							<a routerLink="categorias" routerLinkActive="sidebar-item-active" class="flex items-center px-3 py-2 rounded-lg hover:bg-white/60 transition-colors cursor-pointer text-[#0C0F16]"><i class="pi pi-tags mr-3"></i><span>Categorías</span></a>
+						</li>
+						<li>
+							<a routerLink="usuarios" routerLinkActive="sidebar-item-active" class="flex items-center px-3 py-2 rounded-lg hover:bg-white/60 transition-colors cursor-pointer text-[#0C0F16]"><i class="pi pi-users mr-3"></i><span>Usuarios</span></a>
+						</li>
+					</ul>
+		</nav>
+
+		<div>
+			<button class="w-full px-4 py-2 rounded-lg" style="background: #fff; color: var(--color-azul);">Salir</button>
+		</div>
+	</aside>
+
+	<!-- Main content -->
+	<main class="flex-1 p-6 bg-white">
+		<!-- Navbar inside home -->
+		<header class="flex items-center justify-between mb-6">
+			<div class="flex items-center gap-4">
+				<button id="sidebarToggle" class="p-2 rounded-md hover:bg-gray-100"><i class="pi pi-bars"></i></button>
+				<h1 class="text-2xl font-semibold text-[#0C0F16]">Panel</h1>
+			</div>
+			<div class="flex items-center gap-3">
+				<div class="text-sm text-[#355C7D]/80">Hola, Usuario</div>
+				<img src="/assets/avatar-placeholder.png" alt="avatar" class="w-8 h-8 rounded-full" />
+			</div>
+		</header>
+
+			<!-- Content area: render child routes -->
+			<section class="grid grid-cols-1 gap-4">
+				<router-outlet></router-outlet>
+			</section>
+	</main>
+</div>

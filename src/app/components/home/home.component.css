@@ -1,0 +1,10 @@
+/* Styles for home layout */
+
+.sidebar-item-active {
+	background: rgba(255,255,255,0.8);
+}
+
+p-card {
+	--card-radius: 0.5rem;
+}
+

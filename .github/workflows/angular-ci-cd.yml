@@ -1,31 +1,67 @@
-# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
-
+# This workflow will build, dockerize, and deploy the Angular application to Azure App Service
 name: Angular CI/CD con Docker
 
 on:
   push:
-    branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
+    branches: [ "master", "main" ] # Soporta 'main' si cambiaste de rama
+    paths:
+      - 'Inventario-fronted/**' # Asegúrate de que esta ruta sea correcta
+  workflow_dispatch: # Permite ejecutar manualmente
+
+env:
+  NODE_VERSION: '20.x' # Usaremos una sola versión de Node.js para la compilación final
+  ACR_NAME: 'miacrrepo' # REEMPLAZAR: El nombre corto de tu ACR (sin el .azurecr.io)
+  WEBAPP_NAME: 'inventario-frontend-app' # REEMPLAZAR: El nombre de tu App Service en Azure
+  FRONTEND_PATH: 'Inventario-fronted' # REEMPLAZAR: La ruta a tu carpeta Angular
 
 jobs:
-  build:
-
+  build-and-deploy:
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [18.x, 20.x, 22.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-
+    
     steps:
     - uses: actions/checkout@v4
-    - name: Use Node.js ${{ matrix.node-version }}
+
+    # --- CI: Compilación y Pruebas (Opcional) ---
+    - name: Use Node.js ${{ env.NODE_VERSION }}
       uses: actions/setup-node@v4
       with:
-        node-version: ${{ matrix.node-version }}
+        node-version: ${{ env.NODE_VERSION }}
         cache: 'npm'
-    - run: npm ci
-    - run: npm run build --if-present
-    - run: npm test
+        cache-dependency-path: ${{ env.FRONTEND_PATH }}/package-lock.json
+        
+    - name: Instalar dependencias
+      run: npm ci
+      working-directory: ${{ env.FRONTEND_PATH }}
+      
+    - name: Ejecutar pruebas (Opcional)
+      run: npm test --if-present
+      working-directory: ${{ env.FRONTEND_PATH }}
+      
+    # --- CD: Dockerización y Despliegue ---
+    
+    # 1. Login en Azure (Usando la Entidad de Servicio configurada en Secretos)
+    - name: Azure Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+        
+    # 2. Construir y Subir la imagen Docker a ACR
+    - name: Build and Push Docker Image
+      uses: docker/build-push-action@v5
+      with:
+        context: ${{ env.FRONTEND_PATH }}
+        push: true
+        # La URL completa del ACR se genera automáticamente
+        tags: ${{ env.ACR_NAME }}.azurecr.io/inventario-frontend:${{ github.sha }}
+        file: ${{ env.FRONTEND_PATH }}/Dockerfile # Asegúrate de que el Dockerfile esté aquí
+        # Configuración para autenticación de ACR (usando credenciales de Azure Login)
+        registry: ${{ env.ACR_NAME }}.azurecr.io
+        username: ${{ secrets.ACR_USERNAME }}
+        password: ${{ secrets.ACR_PASSWORD }}
+        
+    # 3. Desplegar a Azure App Service
+    - name: Deploy to Azure App Service
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: ${{ env.WEBAPP_NAME }}
+        images: ${{ env.ACR_NAME }}.azurecr.io/inventario-frontend:${{ github.sha }}
